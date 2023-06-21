@@ -1,0 +1,238 @@
+var canvas = document.getElementById("gameCanvas");
+var ctx = canvas.getContext("2d");
+
+// Параметры игры
+var player = {
+  x: canvas.width / 2,
+  y: canvas.height - 30,
+  width: 30,
+  height: 30,
+  color: "#0095DD",
+  canShoot: true,
+  shootDelay: 50, // Задержка между выстрелами (в миллисекундах)
+  bulletAlive: false,
+  bulletSpeed: 5,
+  bullets: []
+};
+
+var enemies = [];
+var enemyWidth = 30;
+var enemyHeight = 30;
+var enemyRowCount = 5;
+var enemyColumnCount = 8;
+var enemyPadding = 10;
+var enemyOffsetTop = 30;
+var enemyOffsetLeft = 30;
+var enemySpeed = 1;
+var spawnInterval = 2000; // Интервал спавна противников (в миллисекундах)
+var lastSpawnTime = 0;
+
+for (var c = 0; c < enemyColumnCount; c++) {
+  enemies[c] = [];
+  for (var r = 0; r < enemyRowCount; r++) {
+    enemies[c][r] = { x: 0, y: 0, alive: false };
+  }
+}
+
+// Обновление позиций и состояний объектов игры
+function update() {
+  // Обновление позиции игрока
+  if (rightPressed && player.x < canvas.width - player.width) {
+    player.x += 5;
+  } else if (leftPressed && player.x > 0) {
+    player.x -= 5;
+  }
+
+  // Обновление позиций пуль игрока
+  for (var i = 0; i < player.bullets.length; i++) {
+    var bullet = player.bullets[i];
+    bullet.y -= player.bulletSpeed;
+    if (bullet.y < 0) {
+      // Удаление пули, если она вышла за пределы холста
+      player.bullets.splice(i, 1);
+      player.bulletAlive = false;
+      i--;
+    } else {
+      // Проверка столкновения пули с врагами
+      for (var c = 0; c < enemyColumnCount; c++) {
+        for (var r = 0; r < enemyRowCount; r++) {
+          var enemy = enemies[c][r];
+          if (enemy.alive) {
+            if (
+              bullet.x >= enemy.x &&
+              bullet.x <= enemy.x + enemyWidth &&
+              bullet.y >= enemy.y &&
+              bullet.y <= enemy.y + enemyHeight
+            ) {
+              // Попадание пули по врагу
+              enemy.alive = false;
+              player.bullets.splice(i, 1);
+              player.bulletAlive = false;
+              i--;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // Обновление позиций противников
+  var isGameOver = false;
+  for (var c = 0; c < enemyColumnCount; c++) {
+    for (var r = 0; r < enemyRowCount; r++) {
+      var enemy = enemies[c][r];
+      if (enemy.alive) {
+        enemy.x += enemySpeed;
+        if (enemy.x + enemyWidth > canvas.width || enemy.x < 0) {
+          // Изменение направления движения противников, если они достигли края холста
+          enemySpeed *= -1;
+          // Смещение противников вниз
+          for (var cc = 0; cc < enemyColumnCount; cc++) {
+            for (var rr = 0; rr < enemyRowCount; rr++) {
+              enemies[cc][rr].y += enemyHeight;
+            }
+          }
+        }
+        if (enemy.y + enemyHeight > canvas.height) {
+          // Игра окончена, если противник достиг нижней части холста
+          isGameOver = true;
+        }
+      }
+    }
+  }
+
+  if (isGameOver) {
+    // Обработка окончания игры
+    gameOver();
+  }
+  
+  // Обновление спавна противников
+  var currentTime = Date.now();
+  if (currentTime - lastSpawnTime > spawnInterval) {
+    spawnEnemy();
+    lastSpawnTime = currentTime;
+  }
+}
+
+// Отрисовка игровых объектов на холсте
+function draw() {
+  // Отрисовка игрока
+  ctx.beginPath();
+  ctx.rect(player.x, player.y, player.width, player.height);
+  ctx.fillStyle = player.color;
+  ctx.fill();
+  ctx.closePath();
+
+  // Отрисовка пуль игрока
+  for (var i = 0; i < player.bullets.length; i++) {
+    var bullet = player.bullets[i];
+    ctx.beginPath();
+    ctx.rect(bullet.x, bullet.y, bullet.width, bullet.height);
+    ctx.fillStyle = "#FF0000";
+    ctx.fill();
+    ctx.closePath();
+  }
+
+  // Отрисовка противников
+  for (var c = 0; c < enemyColumnCount; c++) {
+    for (var r = 0; r < enemyRowCount; r++) {
+      if (enemies[c][r].alive) {
+        var enemyX = enemies[c][r].x;
+        var enemyY = enemies[c][r].y;
+        ctx.beginPath();
+        ctx.rect(enemyX, enemyY, enemyWidth, enemyHeight);
+        ctx.fillStyle = "#FF0000";
+        ctx.fill();
+        ctx.closePath();
+      }
+    }
+  }
+}
+
+// Обработчики событий для управления игроком
+document.addEventListener("keydown", keyDownHandler, false);
+document.addEventListener("keyup", keyUpHandler, false);
+document.addEventListener("keydown", shootHandler, false);
+
+var rightPressed = false;
+var leftPressed = false;
+var spacePressed = false;
+
+function keyDownHandler(event) {
+  if (event.key === "Right" || event.key === "ArrowRight") {
+    rightPressed = true;
+  } else if (event.key === "Left" || event.key === "ArrowLeft") {
+    leftPressed = true;
+  }
+}
+
+function keyUpHandler(event) {
+  if (event.key === "Right" || event.key === "ArrowRight") {
+    rightPressed = false;
+  } else if (event.key === "Left" || event.key === "ArrowLeft") {
+    leftPressed = false;
+  }
+}
+
+function shootHandler(event) {
+    if (event.code === "Space" && !spacePressed && player.canShoot) {
+      spacePressed = true;
+      // Создание пули игрока
+      var bullet = {
+        x: player.x + player.width / 2 - 2.5,
+        y: player.y - 5,
+        width: 5,
+        height: 5
+      };
+      player.bullets.push(bullet);
+      player.canShoot = false;
+  
+      // Задержка между выстрелами
+      setTimeout(function () {
+        player.canShoot = true;
+        spacePressed = false;
+      }, player.shootDelay);
+    }
+  }
+  
+
+function spawnEnemy() {
+  for (var c = 0; c < enemyColumnCount; c++) {
+    for (var r = 0; r < enemyRowCount; r++) {
+      if (!enemies[c][r].alive) {
+        var enemyX = (r * (enemyWidth + enemyPadding)) + enemyOffsetLeft;
+        var enemyY = (c * (enemyHeight + enemyPadding)) + enemyOffsetTop;
+        enemies[c][r].x = enemyX;
+        enemies[c][r].y = enemyY;
+        enemies[c][r].alive = true;
+        return;
+      }
+    }
+  }
+}
+
+function gameOver() {
+  // Очистка холста
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // Отображение сообщения об окончании игры
+  ctx.font = "36px Arial";
+  ctx.fillStyle = "#FF0000";
+  ctx.fillText("Game Over", canvas.width / 2 - 80, canvas.height / 2);
+}
+
+// Главный игровой цикл
+function gameLoop() {
+  // Очистка холста
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // Обновление и отрисовка игрового состояния
+  update();
+  draw();
+
+  // Запуск следующего цикла анимации
+  requestAnimationFrame(gameLoop);
+}
+
+// Запуск игры
+gameLoop();
