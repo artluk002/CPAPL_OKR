@@ -1,0 +1,8 @@
+C:\ОАиП\labs\OKRKPIAP\OKRKPIAP\bin\Debug\OKRKPIAP.exe.config
+C:\ОАиП\labs\OKRKPIAP\OKRKPIAP\bin\Debug\OKRKPIAP.exe
+C:\ОАиП\labs\OKRKPIAP\OKRKPIAP\bin\Debug\OKRKPIAP.pdb
+C:\ОАиП\labs\OKRKPIAP\OKRKPIAP\obj\Debug\OKRKPIAP.csproj.AssemblyReference.cache
+C:\ОАиП\labs\OKRKPIAP\OKRKPIAP\obj\Debug\OKRKPIAP.csproj.SuggestedBindingRedirects.cache
+C:\ОАиП\labs\OKRKPIAP\OKRKPIAP\obj\Debug\OKRKPIAP.csproj.CoreCompileInputs.cache
+C:\ОАиП\labs\OKRKPIAP\OKRKPIAP\obj\Debug\OKRKPIAP.exe
+C:\ОАиП\labs\OKRKPIAP\OKRKPIAP\obj\Debug\OKRKPIAP.pdb

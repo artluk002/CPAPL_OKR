@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33213.308
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OKRKPIAP", "OKRKPIAP\OKRKPIAP.csproj", "{EDDA4CE4-D063-4404-B211-868E1311EEF6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EDDA4CE4-D063-4404-B211-868E1311EEF6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EDDA4CE4-D063-4404-B211-868E1311EEF6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EDDA4CE4-D063-4404-B211-868E1311EEF6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EDDA4CE4-D063-4404-B211-868E1311EEF6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2D116EAB-CD10-4626-842D-0F1E0B53A5E6}
+	EndGlobalSection
+EndGlobal

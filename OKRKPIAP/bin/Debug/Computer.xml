@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<NetBook xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Frequency>5600</Frequency>
+  <CoresCount>8</CoresCount>
+  <MemoryVolume>8190</MemoryVolume>
+  <HardDiskVolume>2000</HardDiskVolume>
+  <AutonomWork>120</AutonomWork>
+</NetBook>
